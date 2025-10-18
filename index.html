@@ -1,64 +1,151 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Monthversarry Sayang</title>
+  <meta name="description" content="I Love You Unlimited Anisa Aulia">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/font-awesome.css">
 
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Happy Monthversarry Sayang</title>
-    <meta name="description" content="I Love You Unlimited Anisa Aulia">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js" integrity="sha512-J9QfbPuFlqGD2CYVCa6zn8/7PEgZnGpM5qtFOBZgwujjDnG5w5Fjx46YzqvIh/ORstcj7luStvvIHkisQi5SKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" integrity="sha512-cViKBZswH231Ui53apFnPzem4pvG8mlCDrSyZskDE9OK2gyUd/L08e1AC0wjJodXYZ1wmXEuNimN1d3MWG7jaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+  <script src="js/flipbook.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffe6f0;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
 
-    <script src="js/flipbook.min.js"></script>
+    /* Tampilan lock screen */
+    #lock-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(145deg, #ffb6c1, #ffc6d6);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.8s ease;
+      z-index: 9999;
+    }
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#container").flipBook({
-                pages: [{
-                        src: "images/book2/page1.jpg",
-                        thumb: "images/book2/thumb1.jpg",
-                        title: "Cover"
-                    },
-                    {
-                        src: "images/book2/page2.jpg",
-                        thumb: "images/book2/thumb2.jpg",
-                        title: "Page two"
-                    },
-                    {
-                        src: "images/book2/page3.jpg",
-                        thumb: "images/book2/thumb3.jpg",
-                        title: "Page three"
-                    },
-                    {
-                        src: "images/book2/page4.jpg",
-                        thumb: "images/book2/thumb4.jpg",
-                        title: "Page four"
-                    },
-                    {
-                        src: "images/book2/page5.jpg",
-                        thumb: "images/book2/thumb5.jpg",
-                        title: "Page four"
-                    },
-                    {
-                        src: "images/book2/page6.jpg",
-                        thumb: "images/book2/thumb6.jpg",
-                        title: "Last Page, But I Love You Unlimited Anisa Aulia"
-                    }
-                ]
-            });
+    .lock-icon {
+      font-size: 80px;
+      color: #ff3366;
+      margin-bottom: 20px;
+      transition: transform 0.3s;
+    }
 
-        })
-    </script>
+    .pin-inputs {
+      display: flex;
+      gap: 10px;
+    }
 
+    .pin-inputs input {
+      width: 50px;
+      height: 60px;
+      text-align: center;
+      font-size: 24px;
+      border: 2px solid #ff6699;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .pin-inputs input:focus {
+      border-color: #ff3366;
+      box-shadow: 0 0 5px #ff3366;
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 15px;
+      font-weight: 500;
+      display: none;
+    }
+
+    #container {
+      display: none;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .unlock {
+      transform: rotate(-25deg);
+      color: #4caf50;
+    }
+  </style>
 </head>
-
 <body>
-    <div id="container"></div>
-</body>
 
+  <!-- Lock Screen -->
+  <div id="lock-screen">
+    <i class="fa fa-lock lock-icon"></i>
+    <div class="pin-inputs">
+      <input type="password" maxlength="1" inputmode="numeric">
+      <input type="password" maxlength="1" inputmode="numeric">
+      <input type="password" maxlength="1" inputmode="numeric">
+      <input type="password" maxlength="1" inputmode="numeric">
+    </div>
+    <div class="error-message">PIN salah, coba lagi!</div>
+  </div>
+
+  <!-- Flipbook Container -->
+  <div id="container"></div>
+
+  <script>
+    $(document).ready(function () {
+      const correctPIN = "0103"; // 🔒 Ganti PIN sesuai keinginanmu
+      const inputs = $(".pin-inputs input");
+      const lockScreen = $("#lock-screen");
+      const lockIcon = $(".lock-icon");
+      const errorMsg = $(".error-message");
+
+      // Fokus otomatis ke input berikutnya
+      inputs.on("input", function () {
+        const index = inputs.index(this);
+        if (this.value.length === 1 && index < inputs.length - 1) {
+          inputs.eq(index + 1).focus();
+        }
+
+        // Jika semua terisi
+        if (inputs.toArray().every(input => input.value !== "")) {
+          const enteredPIN = inputs.map((_, el) => el.value).get().join("");
+          if (enteredPIN === correctPIN) {
+            errorMsg.hide();
+            lockIcon.removeClass("fa-lock").addClass("fa-unlock unlock");
+            setTimeout(() => {
+              lockScreen.fadeOut(800);
+              $("#container").fadeIn(1000);
+
+              // Jalankan flipbook setelah unlock
+              $("#container").flipBook({
+                pages: [
+                  { src: "images/book2/page1.jpg", thumb: "images/book2/thumb1.jpg", title: "Cover" },
+                  { src: "images/book2/page2.jpg", thumb: "images/book2/thumb2.jpg", title: "Page two" },
+                  { src: "images/book2/page3.jpg", thumb: "images/book2/thumb3.jpg", title: "Page three" },
+                  { src: "images/book2/page4.jpg", thumb: "images/book2/thumb4.jpg", title: "Page four" },
+                  { src: "images/book2/page5.jpg", thumb: "images/book2/thumb5.jpg", title: "Page five" },
+                  { src: "images/book2/page6.jpg", thumb: "images/book2/thumb6.jpg", title: "Last Page, I Love You Unlimited Anisa Aulia" }
+                ]
+              });
+            }, 1000);
+          } else {
+            errorMsg.fadeIn(300);
+            inputs.val("");
+            inputs.eq(0).focus();
+          }
+        }
+      });
+
+      // Fokus ke input pertama saat load
+      inputs.eq(0).focus();
+    });
+  </script>
+</body>
 </html>
